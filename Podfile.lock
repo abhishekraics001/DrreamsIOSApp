@@ -1,0 +1,24 @@
+PODS:
+  - Alamofire (5.6.4)
+  - FSPagerView (0.8.3)
+  - SwiftyJSON (5.0.1)
+
+DEPENDENCIES:
+  - Alamofire
+  - FSPagerView
+  - SwiftyJSON
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - FSPagerView
+    - SwiftyJSON
+
+SPEC CHECKSUMS:
+  Alamofire: 4e95d97098eacb88856099c4fc79b526a299e48c
+  FSPagerView: 670405b2f18e2a87fa37f20b00de783e562c25a8
+  SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
+
+PODFILE CHECKSUM: 66f79d31f7c342ac685f3f153db41a1c26e2f60b
+
+COCOAPODS: 1.10.1

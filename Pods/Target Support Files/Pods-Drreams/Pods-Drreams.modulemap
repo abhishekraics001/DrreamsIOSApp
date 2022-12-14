@@ -1,0 +1,6 @@
+framework module Pods_Drreams {
+  umbrella header "Pods-Drreams-umbrella.h"
+
+  export *
+  module * { export * }
+}
