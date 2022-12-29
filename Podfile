@@ -9,5 +9,6 @@ target 'Drreams' do
   pod 'FSPagerView'
   pod 'Alamofire'
   pod 'SwiftyJSON'
+  pod 'Nuke'
 
 end

@@ -30,7 +30,7 @@ class APIRequest {
     
     func getMethod() {
         print("getMethod ")
-        AF.request("http://dummy.restapiexample.com/api/v1/employees", parameters: nil, headers: nil).validate(statusCode: 200 ..< 299).responseData { response in
+        AF.request( baseURL, parameters: nil, headers: nil).validate(statusCode: 200 ..< 299).responseData { response in
             switch response.result {
                 case .success(let data):
                     do {
@@ -68,7 +68,7 @@ class APIRequest {
             "age": "23"
         ]
         
-        AF.request("http://dummy.restapiexample.com/api/v1/create", method: .post, parameters: params, encoding: JSONEncoding.default, headers: nil).validate(statusCode: 200 ..< 299).responseData { response in
+        AF.request(baseURL , method: .post, parameters: params, encoding: JSONEncoding.default, headers: nil).validate(statusCode: 200 ..< 299).responseData { response in
             switch response.result {
                 case .success(let data):
                     do {

@@ -23,9 +23,10 @@ class MainViewController: UIViewController {
     private var revealSideMenuOnTop: Bool = true
     
     var gestureEnabled: Bool = true
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.view.backgroundColor =  #colorLiteral(red: 0, green: 120, blue: 240, alpha: 1)  // #colorLiteral(red: 0.737254902, green: 0.1294117647, blue: 0.2941176471, alpha: 1) // #colorLiteral(red: 0, green: 120, blue: 240, alpha: 1) #colorLiteral(red: 0.737254902, green: 0.1294117647, blue: 0.2941176471, alpha: 1)
        
         // Navigation Bar Appearance
@@ -73,9 +74,11 @@ class MainViewController: UIViewController {
         view.addGestureRecognizer(panGestureRecognizer)
 
         // Default Main View Controller
-        showViewController(viewController: UINavigationController.self, storyboardId: "HomeNavID")
+        showViewController(viewController: UINavigationController.self, storyboardId: "IntroId")
+//        showViewController(viewController: UINavigationController.self, storyboardId: "HomeNavID")
     }
 
+    
     func setNavBarAppearance(tintColor: UIColor, barColor: UIColor) {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -107,6 +110,7 @@ class MainViewController: UIViewController {
     // Call this Button Action from the View Controller you want to Expand/Collapse when you tap a button
     @IBAction open func revealSideMenu() {
         self.sideMenuState(expanded: self.isExpanded ? false : true)
+        self.sideMenuViewController.viewDidLoad()
     }
 
     func sideMenuState(expanded: Bool) {
@@ -167,6 +171,13 @@ extension MainViewController: SideMenuViewControllerDelegate {
             // Settings
             self.showViewController(viewController: UINavigationController.self, storyboardId: "SettingsNavID")
         case 6:
+            //Saparator
+            let cell = SideMenuCell()
+            cell.communicate.isHidden = false
+            cell.saparator.isHidden = false
+            cell.titleLabel.isHidden = true
+            cell.iconImageView.isHidden = true
+        case 7:
             // Like us on facebook
             let safariVC = SFSafariViewController(url: URL(string: "https://www.facebook.com/johncodeos")!)
             present(safariVC, animated: true)
@@ -177,7 +188,14 @@ extension MainViewController: SideMenuViewControllerDelegate {
         // Collapse side menu with animation
         DispatchQueue.main.async { self.sideMenuState(expanded: false) }
     }
-
+    func selectLoginBtn(_ login:UIButton){
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let vc:SignInVC = storyboard.instantiateViewController(identifier: "SignInVC")
+//        present(vc, animated: true)
+        print("succes")
+        self.showViewController(viewController: UINavigationController.self, storyboardId: "SignInVC")
+        DispatchQueue.main.async { self.sideMenuState(expanded: false) }
+    }
     func showViewController<T: UIViewController>(viewController: T.Type, storyboardId: String) -> () {
         // Remove the previous View
         for subview in view.subviews {
@@ -338,5 +356,30 @@ extension UIViewController {
             return viewController as? MainViewController
         }
         return nil
+    }
+    /// Creates a gradient image with the given settings
+    static func gradient(size : CGSize, colors : [UIColor]) -> UIImage?
+    {
+        // Turn the colors into CGColors
+        let cgcolors = colors.map { $0.cgColor }
+        
+        // Begin the graphics context
+        UIGraphicsBeginImageContextWithOptions(size, true, 0.0)
+        
+        // If no context was retrieved, then it failed
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        
+        // From now on, the context gets ended if any return happens
+        defer { UIGraphicsEndImageContext() }
+        
+        // Create the Coregraphics gradient
+        var locations : [CGFloat] = [0.0, 1.0]
+        guard let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: cgcolors as NSArray as CFArray, locations: &locations) else { return nil }
+        
+        // Draw the gradient
+        context.drawLinearGradient(gradient, start: CGPoint(x: 0.0, y: 0.0), end: CGPoint(x: size.width, y: 0.0), options: [])
+        
+        // Generate the image (the defer takes care of closing the context)
+        return UIGraphicsGetImageFromCurrentImageContext()
     }
 }

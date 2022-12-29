@@ -7,44 +7,48 @@
 
 import UIKit
 import FSPagerView
-
+import Nuke
 
 class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDelegate, UITableViewDelegate, UITableViewDataSource {
-  
-
-    
-   
-    
-  
-    
-    
-    
-    
- 
-    
-    
+    @IBOutlet weak var bar : UINavigationBar!
     @IBOutlet var sideMenuBtn: UIBarButtonItem!
     @IBOutlet weak var rightNavBar: UIBarButtonItem!
+    @IBOutlet weak var headerView: CustomView!
+    @IBOutlet weak var sideBtn:CustomButton!
+    @IBOutlet weak var filterBtn:CustomButton!
     let btn = BadgedButtonItem(with: UIImage(systemName: "cart.fill")!)
-    
+    var courseID = 0
     @IBOutlet weak var tableView: UITableView!
     
+    var courseid = SendDetailId()
+    var loaderView = LoaderView()
+    var getList = HomeModel()
+    var slider = [Slider]()
+    var populardata = PopularModel()
+    var courseList = [Courses]()
+
+    let gradientLayer = CAGradientLayer()
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Menu Button Tint Color
         navigationController?.navigationBar.tintColor = .white
-
-        sideMenuBtn.target = revealViewController()
-        sideMenuBtn.action = #selector(revealViewController()?.revealSideMenu)
+//        bar.barTintColor = .blue
+        filterBtn.imageTintColor = UIImage(named: "filter-2-fill")?.withTintColor(.white)
         
-        
-        self.title = "Home"
-        
+        headerView.backgroundColor = .black
+        headerView.layer.cornerRadius = 25
+        gradientLayer.cornerRadius = 25
+        gradientLayer.frame = headerView.bounds
+        gradientLayer.colors = [UIColor.systemBlue.cgColor, UIColor.blue.cgColor, UIColor.black.cgColor]
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 0)
+        self.headerView.layer.insertSublayer(gradientLayer, at: 0)
        
 
-        let searchImage  = UIImage(systemName: "house.fill")!
-        let editButton   = UIBarButtonItem(image: searchImage,  style: .plain, target: self, action: "didTapEditButton:")
+        let searchImage  = UIImage(named: "filter-2-fill")!
+        let editButton   = UIBarButtonItem(image: searchImage,  style: .plain, target: self, action: nil)
         
         //self.navigationItem.rightBarButtonItem = btn
         self.navigationItem.rightBarButtonItems = [editButton, btn ]
@@ -53,23 +57,26 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
             //self.btn.setBadge(with: 1)
         }
         
+        editButton.action = #selector(barButtonAction)
         
         self.view.addSubview(pageControl)
         self.pageControl.numberOfPages = self.imageNames.count
         self.pageControl.contentHorizontalAlignment = .center
+        self.pageControl.contentVerticalAlignment = .bottom
         self.pageControl.contentMode = .bottom
         self.pagerView.dataSource = self
         self.pagerView.delegate = self
-        self.pageControl.contentInsets = UIEdgeInsets(top: 360, left: 420, bottom: 0, right: 20)
-        self.pageControl.setStrokeColor(.green, for: .normal)
-        self.pageControl.setStrokeColor(.yellow, for: .selected)
-        self.pageControl.setFillColor(.gray, for: .normal)
-        self.pageControl.setFillColor(.white, for: .selected)
-        
-        
+        self.pageControl.contentInsets = UIEdgeInsets(top: 580, left: 420, bottom: 0, right: 20)
+        self.pageControl.setStrokeColor(.white, for: .normal)
+        self.pageControl.setStrokeColor(.orange, for: .selected)
+        self.pageControl.setFillColor(.white, for: .normal)
+        self.pageControl.setFillColor(.orange, for: .selected)
+        self.pageControl.setPath(UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 6, height: 6)), for: .normal)
+        self.pageControl.setPath(UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 6, height: 6), cornerRadius: 3), for: .selected)
+        self.pageControl.itemSpacing = 5
         
         tableView.delegate = self
-                tableView.dataSource = self
+        tableView.dataSource = self
        
         // Register TableView Cell
         self.tableView.register(CourseListTableViewCell.nib, forCellReuseIdentifier: CourseListTableViewCell.identifier)
@@ -80,12 +87,67 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
         
         getDataURL();
         
+        getServiceProvider()
         
-
         
     }
-    
-    
+    override func viewDidAppear(_ animated: Bool) {
+        Constants.courseId = 0
+        getPopularList()
+    }
+    @objc func barButtonAction() {
+       print("Button pressed")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc:FilterVC = storyboard.instantiateViewController(identifier: "FilterVC")
+        self.navigationController?.present(vc, animated: true)
+    }
+    //API calling
+    private func getServiceProvider(){
+        self.loaderView.showLoader(view: self.view)
+        let parameters = ""
+        let webService = WebService()
+        let viewModel = HomeSliderViewModel(service: webService, parameters: parameters)
+        
+        viewModel.serviceProviderApi(parameters: parameters) { data in
+            self.loaderView.hideLoader(view: self.view)
+            
+            if let documentList = viewModel.modelData.data{
+                debugPrint("viewModel", viewModel)
+                if let slider = viewModel.modelData.data?.sliders{
+                    
+                    self.getList = HomeModel()
+                    self.getList = documentList
+                    self.slider = slider
+                    debugPrint("count",self.slider.count)
+                    self.pagerView.reloadData()
+                    
+                }
+            }
+        }
+    }
+    private func getPopularList(){
+        self.loaderView.showLoader(view: self.view)
+        let parameters = ""
+        let webService = WebService()
+        let viewModel = HomeSliderViewModel(service: webService, parameters: parameters)
+        
+        viewModel.popularCourseApi(parameters: parameters) { data in
+            self.loaderView.hideLoader(view: self.view)
+            
+            if let documentList = viewModel.modelDataa?.data{
+                debugPrint("viewModel", viewModel)
+                if let courseList = viewModel.modelDataa.data?.courses{
+                    
+                    self.populardata = PopularModel()
+                    self.populardata = documentList
+                    self.courseList = courseList
+                    debugPrint("count:",self.courseList.count)
+                    self.tableView.reloadData()
+                    
+                }
+            }
+        }
+    }
     func getDataURL(){
         print("getMethod ")
         let req = APIRequest.APIRequestInstance.getMethod();
@@ -101,21 +163,32 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200.0
+        return 280.0
     }
    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return courseList.count
     }
    
  
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CourseListTableViewCell.identifier, for: indexPath) as? CourseListTableViewCell else { fatalError("xib doesn't exist") }
+        cell.configureCell(data: courseList[indexPath.row])
+        
         
         return cell
     }
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)as! CourseListTableViewCell
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc : DetailsVC = storyboard.instantiateViewController(identifier: "DetailsVC")
+        vc.courseId = courseList[indexPath.row].id
+        debugPrint(vc.courseId)
+        Routes.ser = String(courseList[indexPath.row].id)
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
     
     
     
@@ -148,7 +221,8 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
         // MARK:- FSPagerView DataSource
         
         public func numberOfItems(in pagerView: FSPagerView) -> Int {
-            return self.imageNames.count
+            return self.slider.count
+            
         }
         
         public func pagerView(_ pagerView: FSPagerView, cellForItemAt index: Int) -> FSPagerViewCell {
@@ -163,7 +237,9 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
             cell.layer.cornerRadius = 25
             cell.layer.masksToBounds = true
             
-            cell.imageView?.image = UIImage(named: self.imageNames[index])
+//            cell.imageView?.image = UIImage(named: self.imageNames[index])
+            setImage(imageView: cell.imageView!, imageUrl: slider[index].v_slider_mobile_image_path)
+//            debugPrint("image:", slider[index].v_slider_mobile_image_path)
             cell.imageView?.contentMode = .scaleAspectFill
             cell.imageView?.clipsToBounds = true
            // cell.imageView?.layer.cornerRadius = 12.0
@@ -171,7 +247,7 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
             //cell.imageView?.layer.cornerRadius = cell.imageView?.frame.size.width ?? 200 / 2
 
             //cell.imageView?.clipsToBounds = true
-            cell.textLabel?.text = index.description+index.description
+            cell.textLabel?.text = String(slider[index].v_title)+"\n"+String(slider[index].t_description ?? "")
             return cell
         }
         
@@ -192,9 +268,43 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
         }
         
       
-    
+    private func setImage(imageView: UIImageView, imageUrl: String){
+        if let url = URL(string: imageUrl) {
+            let contentModes = ImageLoadingOptions.ContentModes(
+                success: .scaleAspectFill,
+                failure: .scaleAspectFit,
+                placeholder: .scaleAspectFit)
+            var options = ImageLoadingOptions()
+            options.contentModes = contentModes
+            
+            ImagePipeline.shared.loadImage(
+                with: url) { [weak self] response in
+                    guard self != nil else {
+                        return
+                    }
+                    switch response {
+                    case .failure:
+                        imageView.image = UIImage(named: "")
+                    case .success:
+                        Nuke.loadImage(with: url, options: options, into: imageView)
+                    }
+                }
+        }
+    }
+    @IBAction func menu(_ sender:CustomButton){
+        self.navigationController?.revealViewController()?.revealSideMenu()
 }
-
+    @IBAction func filterAction(_ sender:UIButton){
+        let storyboard = UIStoryboard(name:"Main", bundle: nil)
+        let vc:FilterVC = storyboard.instantiateViewController(identifier: "FilterVC")
+        self.navigationController?.present(vc, animated: true)
+    }
+    @IBAction func cartAction(_ sender:UIButton){
+        let storyboard = UIStoryboard(name:"Main", bundle: nil)
+        let vc:CartVC = storyboard.instantiateViewController(identifier: "CartVC")
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
 
 class BadgedButtonItem: UIBarButtonItem {
 
@@ -256,13 +366,14 @@ class BadgedButtonItem: UIBarButtonItem {
     }
 
     @objc func buttonPressed() {
-        if let action = tapAction {
-            action()
-        }
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc:SignInVC = storyboard.instantiateViewController(identifier: "SignInVC")
+        UIPresentationController(presentedViewController: vc, presenting: vc)
     }
     
     
     
+    }
     
     
     
@@ -304,3 +415,39 @@ extension UIBarButtonItem {
   }
 }
 */
+extension UINavigationBar
+{
+    /// Applies a background gradient with the given colors
+    func applyNavigationGradient( colors : [UIColor]) {
+        var frameAndStatusBar: CGRect = self.bounds
+        frameAndStatusBar.size.height += 20 // add 20 to account for the status bar
+        
+        setBackgroundImage(UINavigationBar.gradient(size: frameAndStatusBar.size, colors: colors), for: .default)
+    }
+    
+    /// Creates a gradient image with the given settings
+    static func gradient(size : CGSize, colors : [UIColor]) -> UIImage?
+    {
+        // Turn the colors into CGColors
+        let cgcolors = colors.map { $0.cgColor }
+        
+        // Begin the graphics context
+        UIGraphicsBeginImageContextWithOptions(size, true, 0.0)
+        
+        // If no context was retrieved, then it failed
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        
+        // From now on, the context gets ended if any return happens
+        defer { UIGraphicsEndImageContext() }
+        
+        // Create the Coregraphics gradient
+        var locations : [CGFloat] = [0.0, 1.0]
+        guard let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: cgcolors as NSArray as CFArray, locations: &locations) else { return nil }
+        
+        // Draw the gradient
+        context.drawLinearGradient(gradient, start: CGPoint(x: 0.0, y: 0.0), end: CGPoint(x: size.width, y: 0.0), options: [])
+        
+        // Generate the image (the defer takes care of closing the context)
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+}

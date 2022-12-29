@@ -12,12 +12,17 @@ class SideMenuCell: UITableViewCell {
     class var identifier: String { return String(describing: self) }
     class var nib: UINib { return UINib(nibName: identifier, bundle: nil) }
     
-    @IBOutlet var iconImageView: UIImageView!
-    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet weak var iconImageView: UIImageView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var saparator: UIView!
+    @IBOutlet weak var communicate: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+        // Saparator
+        communicate.text = "Communicate"
+        self.saparator.isHidden = true
+        self.communicate.isHidden = true
         // Background
         self.backgroundColor = .clear
         
@@ -27,4 +32,5 @@ class SideMenuCell: UITableViewCell {
         // Title
         self.titleLabel.textColor = .darkGray
     }
+    
 }
