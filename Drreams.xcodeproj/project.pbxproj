@@ -98,8 +98,8 @@
 		D5411647294CC97E00303725 /* SubjectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SubjectCell.swift; path = cell/SubjectCell.swift; sourceTree = "<group>"; };
 		D5411648294CC97E00303725 /* SubjectCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SubjectCell.xib; path = cell/SubjectCell.xib; sourceTree = "<group>"; };
 		D54BB6D8294DB38B00AC84DC /* SignInVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInVC.swift; sourceTree = "<group>"; };
-		D54BB6DB294DD51600AC84DC /* CustomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
-		D54BB6DC294DD51600AC84DC /* CustomButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		D54BB6DB294DD51600AC84DC /* CustomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomView.swift; path = Custom/CustomView.swift; sourceTree = "<group>"; };
+		D54BB6DC294DD51600AC84DC /* CustomButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomButton.swift; path = Custom/CustomButton.swift; sourceTree = "<group>"; };
 		D54BB6DE294DD51600AC84DC /* LoaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoaderView.xib; sourceTree = "<group>"; };
 		D54BB6DF294DD51600AC84DC /* LoaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoaderView.swift; sourceTree = "<group>"; };
 		D557DBBF294F938A000CC7A9 /* CountryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryListViewModel.swift; sourceTree = "<group>"; };
@@ -269,7 +269,6 @@
 				D54BB6DD294DD51600AC84DC /* CustomLoader */,
 			);
 			name = Custom;
-			path = "../../gymdocP /gymdocP/Custom";
 			sourceTree = "<group>";
 		};
 		D54BB6DD294DD51600AC84DC /* CustomLoader */ = {
@@ -278,7 +277,8 @@
 				D54BB6DE294DD51600AC84DC /* LoaderView.xib */,
 				D54BB6DF294DD51600AC84DC /* LoaderView.swift */,
 			);
-			path = CustomLoader;
+			name = CustomLoader;
+			path = Custom/CustomLoader;
 			sourceTree = "<group>";
 		};
 		F896C0BE6E27DF7895E7D38E /* Frameworks */ = {
