@@ -1,9 +1,9 @@
 //
 //  CustomButton.swift
-//  HomeOnline
 //
-//  Created by Rishabh Sood on 25/07/19.
-//  Copyright © 2019 Amit Pandey. All rights reserved.
+//
+//  Created by Mohd Shams Naqvi
+//  
 //
 
 import UIKit
