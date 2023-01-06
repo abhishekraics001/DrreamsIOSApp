@@ -62,7 +62,7 @@ class SignInVC: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        searchBar.searchTextField.backgroundColor = .white
         l.colors = [UIColor.systemPink.cgColor, UIColor.purple.cgColor]
         l.startPoint = CGPoint(x: 0, y: 0.5)
         l.endPoint = CGPoint(x: 1, y: 0.5)
@@ -105,7 +105,8 @@ class SignInVC: UIViewController, UITextFieldDelegate {
         self.searchBar.delegate = self
         countryCodetable.delegate = self
         countryCodetable.dataSource = self
-        countryCodetable.register(UINib(nibName: "CountryListCell", bundle: nil), forCellReuseIdentifier: "CountryListCell")
+        self.countryCodetable.register(CountryListCell.nib, forCellReuseIdentifier: CountryListCell.identifier)
+        self.countryCodetable.reloadData()
         
         otp1.delegate = self
         otp2.delegate = self
@@ -191,7 +192,7 @@ class SignInVC: UIViewController, UITextFieldDelegate {
 //        let offset = TimeZone.current.offsetFromUTC() // Set Offset Time
         let parameters: [String: Any] = ["v_device_token": deviceToken, "e_device_type": Constants.deviceType, "v_phone_number": phoneNumber.text!, "v_phone_code": countryCode.text!, "e_otp_receive_type": self.selectedFieldType]
         debugPrint("parameters:", parameters)
-        let webservice = WebService()
+        let webservice = ApiService()
         let viewModel = SignInViewModel(service: webservice, parameters: parameters)
         
         viewModel.loginApi(parameters: parameters) { data in
@@ -224,7 +225,7 @@ class SignInVC: UIViewController, UITextFieldDelegate {
 //        let offset = TimeZone.current.offsetFromUTC() // Set Offset Time
         let parameters: [String: Any] = ["v_device_token": deviceToken, "e_device_type": Constants.deviceType, "v_email_id": emailAddress.text!, "v_phone_code": countryCode.text!, "e_otp_receive_type": self.selectedFieldType]
         debugPrint("parameters:", parameters)
-        let webservice = WebService()
+        let webservice = ApiService()
         let viewModel = SignInViewModel(service: webservice, parameters: parameters)
         
         viewModel.loginApi(parameters: parameters) { data in
@@ -253,9 +254,9 @@ class SignInVC: UIViewController, UITextFieldDelegate {
         self.loaderView.showLoader(view: self.view)
         
 //        let offset = TimeZone.current.offsetFromUTC() // Set Offset Time
-        let parameters: [String: Any] = ["v_device_token": Constants.deviceToken, "e_device_type": Constants.deviceType, "v_otp": otp1.text!+otp2.text!+otp3.text!+otp4.text!, "v_phone_number": countryCode.text!+phoneNumber.text!, "e_otp_verify_type": self.selectedFieldType, "v_app_version": Constants.app_version]
+        let parameters: [String: Any] = ["v_otp_id":otp1.text!+otp2.text!+otp3.text!+otp4.text!, "v_device_token": Constants.deviceToken, "e_device_type": Constants.deviceType, "v_otp": otp1.text!+otp2.text!+otp3.text!+otp4.text!, "v_phone_number": phoneNumber.text!, "e_otp_verify_type": self.selectedFieldType, "v_app_version": Constants.app_version]
         debugPrint("parameters:", parameters)
-        let webservice = WebService()
+        let webservice = ApiService()
         let viewModel = SignInViewModel(service: webservice, parameters: parameters)
         
         viewModel.varifyOtpSigninApi(parameters: parameters) { data in
@@ -267,7 +268,13 @@ class SignInVC: UIViewController, UITextFieldDelegate {
                 if viewModel.flag == true{
                     if let data = viewModel.data{
                         debugPrint("success...", data)
+                        Constants.userName = data.user_details.v_first_name!
+                        Constants.userEmail = data.user_details.v_email_id!
+                        Constants.userNumber = data.user_details.v_phone_number!
+                        Constants.userId = String(data.user_details.id!)
+                        Constants.token = data.user_details.api_token
                         self.dismiss(animated: true)
+                        
                     }
                 }else{
                     Helper.app.showErrorAlert(title: "Alert", message: viewModel.msg!, vc: self)
@@ -285,7 +292,7 @@ class SignInVC: UIViewController, UITextFieldDelegate {
 //        let offset = TimeZone.current.offsetFromUTC() // Set Offset Time
         let parameters: [String: Any] = ["v_device_token": Constants.deviceToken, "e_device_type": Constants.deviceType, "v_otp": otp1.text!+otp2.text!+otp3.text!+otp4.text!, "v_email_id": emailAddress.text!, "e_otp_verify_type": self.selectedFieldType, "v_app_version": Constants.app_version]
         debugPrint("parameters:", parameters)
-        let webservice = WebService()
+        let webservice = ApiService()
         let viewModel = SignInViewModel(service: webservice, parameters: parameters)
         
         viewModel.varifyOtpSigninApi(parameters: parameters) { data in
@@ -301,6 +308,8 @@ class SignInVC: UIViewController, UITextFieldDelegate {
                         Constants.userName = data.user_details.v_first_name!
                         Constants.userEmail = data.user_details.v_email_id!
                         Constants.userNumber = data.user_details.v_phone_number!
+                        Constants.userId = String(data.user_details.id!)
+                        Constants.token = data.user_details.api_token
                     }
                 }else{
                     Helper.app.showErrorAlert(title: "Alert", message: viewModel.msg!, vc: self)
@@ -315,7 +324,7 @@ class SignInVC: UIViewController, UITextFieldDelegate {
     private func getCountryList(){
         self.loaderView.showLoader(view: self.view)
         let parameters = ""
-        let webService = WebService()
+        let webService = ApiService()
         let viewModel = CountryListViewModel(service: webService, parameters: parameters)
         
         viewModel.countryListApi(parameters: parameters) { data in
@@ -343,7 +352,7 @@ class SignInVC: UIViewController, UITextFieldDelegate {
 //        let offset = TimeZone.current.offsetFromUTC() // Set Offset Time
         let parameters: [String: Any] = ["v_device_token": deviceToken, "e_device_type": Constants.deviceType, "v_phone_number": signUpMobile.text!, "v_email_id": signUpEmail.text!, "v_phone_code": signUpCode.text!]
         debugPrint("parameters:", parameters)
-        let webservice = WebService()
+        let webservice = ApiService()
         let viewModel = SignInViewModel(service: webservice, parameters: parameters)
         
         viewModel.signupApi(parameters: parameters) { data in
@@ -377,7 +386,7 @@ class SignInVC: UIViewController, UITextFieldDelegate {
 //        let offset = TimeZone.current.offsetFromUTC() // Set Offset Time
         let parameters: [String: Any] = ["v_device_token": deviceToken, "e_device_type": Constants.deviceType, "v_otp":signUpOTP.text!, "v_phone_number": signUpMobile.text!,"v_app_version":Constants.app_version, "v_email_id": signUpEmail.text!]
         debugPrint("parameters:", parameters)
-        let webservice = WebService()
+        let webservice = ApiService()
         let viewModel = SignInViewModel(service: webservice, parameters: parameters)
         
         viewModel.varifyOtpApi(parameters: parameters) { data in
@@ -411,7 +420,7 @@ class SignInVC: UIViewController, UITextFieldDelegate {
 //        let offset = TimeZone.current.offsetFromUTC() // Set Offset Time
         let parameters: [String: Any] = ["v_first_name":signUpUserName.text!, "v_device_token": deviceToken, "e_device_type": Constants.deviceType, "v_email_id":signUpEmail.text!, "v_phone_number": signUpMobile.text!, "v_profile_pic": "1.jpeg", "i_country_id": Constants.countryId, "v_app_version":Constants.app_version, "specialities": "[1,2]"]
         debugPrint("parameters:", parameters)
-        let webservice = WebService()
+        let webservice = ApiService()
         let viewModel = SignUpViewModel(service: webservice, parameters: parameters)
         
         viewModel.separateSignUpApi(parameters: parameters) { data in
@@ -425,6 +434,7 @@ class SignInVC: UIViewController, UITextFieldDelegate {
                         debugPrint("success...", data)
                         self.otpView.isHidden = true
                         self.loginView.isHidden = true
+                        Constants.token = data.user_details.api_token
                         self.dismiss(animated: false, completion: nil)
                         Helper.app.showErrorAlert(title: "Alert", message: viewModel.msg!, vc: self)
                     }
@@ -537,7 +547,7 @@ class SignInVC: UIViewController, UITextFieldDelegate {
 }
 extension SignInVC: UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 25
+        return 40
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searching {
@@ -548,7 +558,7 @@ extension SignInVC: UITableViewDelegate, UITableViewDataSource, UISearchBarDeleg
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = countryCodetable.dequeueReusableCell(withIdentifier: "CountryListCell", for:indexPath) as! CountryListCell
+        guard let cell = countryCodetable.dequeueReusableCell(withIdentifier: CountryListCell.identifier, for: indexPath) as? CountryListCell else { fatalError("xib doesn't exist") }
         if searching {
             cell.countryName.text = searchedCountry[indexPath.row].v_name
                 } else {

@@ -17,6 +17,7 @@ struct Constants {
     static var userName = ""
     static var userEmail = ""
     static var userNumber = ""
+    static var userId = ""
     static var deviceToken: String = ""
     static var countryId = 0
     static var courseId = 0

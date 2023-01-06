@@ -16,23 +16,27 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
     @IBOutlet weak var headerView: CustomView!
     @IBOutlet weak var sideBtn:CustomButton!
     @IBOutlet weak var filterBtn:CustomButton!
-    let btn = BadgedButtonItem(with: UIImage(systemName: "cart.fill")!)
+    @IBOutlet weak var cartBtn:BadgedButtonItem!
+//    let btn = BadgedButtonItem(with: UIImage(systemName: "cart.fill")!)
     var courseID = 0
     @IBOutlet weak var tableView: UITableView!
-    
+    var userIdForCart = 0
     var courseid = SendDetailId()
     var loaderView = LoaderView()
     var getList = HomeModel()
     var slider = [Slider]()
     var populardata = PopularModel()
     var courseList = [Courses]()
-
+    var addedData = Courses()
+    var favData = Courses()
     let gradientLayer = CAGradientLayer()
+    var addCartBool = false
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Menu Button Tint Color
+//        self.cartBtn.setBadge(with: 2)
         navigationController?.navigationBar.tintColor = .white
 //        bar.barTintColor = .blue
         filterBtn.imageTintColor = UIImage(named: "filter-2-fill")?.withTintColor(.white)
@@ -51,11 +55,11 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
         let editButton   = UIBarButtonItem(image: searchImage,  style: .plain, target: self, action: nil)
         
         //self.navigationItem.rightBarButtonItem = btn
-        self.navigationItem.rightBarButtonItems = [editButton, btn ]
-        self.btn.setBadge(with: 10)
-        btn.tapAction = {
+//        self.navigationItem.rightBarButtonItems = [editButton, btn ]
+//        self.btn.setBadge(with: 10)
+//        btn.tapAction = {
             //self.btn.setBadge(with: 1)
-        }
+//        }
         
         editButton.action = #selector(barButtonAction)
         
@@ -105,7 +109,7 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
     private func getServiceProvider(){
         self.loaderView.showLoader(view: self.view)
         let parameters = ""
-        let webService = WebService()
+        let webService = ApiService()
         let viewModel = HomeSliderViewModel(service: webService, parameters: parameters)
         
         viewModel.serviceProviderApi(parameters: parameters) { data in
@@ -127,8 +131,8 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
     }
     private func getPopularList(){
         self.loaderView.showLoader(view: self.view)
-        let parameters = ""
-        let webService = WebService()
+        let parameters = "&i_page_no=0&e_is_pagination=Yes&i_limit=5&v_search_keyword=&i_category_id=&i_course_badge_type_id=&e_course_content_type=&e_is_certificate=&e_course_access=&e_type=&e_is_featured_course=&i_course_limited_access_duration_id="
+        let webService = ApiService()
         let viewModel = HomeSliderViewModel(service: webService, parameters: parameters)
         
         viewModel.popularCourseApi(parameters: parameters) { data in
@@ -147,6 +151,36 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
                 }
             }
         }
+    }
+    private func addCart() {
+        self.loaderView.showLoader(view: self.view)
+
+        let parameters: [String: Any] = ["v_device_token": Constants.deviceToken, "e_device_type": Constants.deviceType, "i_course_id": userIdForCart, "e_operation": "add","i_course_duration_price_id": "0"]
+        debugPrint("parameters:", parameters)
+        let webservice = ApiService()
+        webservice.state = 1000
+        let viewModel = CartViewModel(service: webservice, parameters: parameters)
+        
+        viewModel.postCartApi(parameters: parameters) { data in
+            self.loaderView.hideLoader(view: self.view)
+            //self.viewModel = data
+            if let viewModel = viewModel.modelData{
+                debugPrint("viewModel", viewModel)
+                
+                if viewModel.flag == true{
+                    if let data = viewModel.data{
+                        debugPrint("success...", data)
+                        Helper.app.showErrorAlert(title: "Alert", message: viewModel.msg!, vc: self)
+                    }
+                }else{
+                    Helper.app.showErrorAlert(title: "Alert", message: viewModel.msg!, vc: self)
+                    debugPrint(viewModel.msg)
+                }
+            }
+            
+            
+        }
+        
     }
     func getDataURL(){
         print("getMethod ")
@@ -176,7 +210,35 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CourseListTableViewCell.identifier, for: indexPath) as? CourseListTableViewCell else { fatalError("xib doesn't exist") }
         cell.configureCell(data: courseList[indexPath.row])
         
+//        if courseList[indexPath.row].id == 0 {
+//            if checkMarkPrivacy{
+//                checkMarkPrivacy = false
+//                checkForPrivacy.setImage(UIImage(systemName:"square"), for: .normal)
+//            }
+//            else{
+//                checkMarkPrivacy = true
+//                checkForPrivacy.setImage(UIImage(systemName:"checkmark.square"), for: .normal)
+//            }
+//        }else{
+//
+//        }
+        cell.addToCartBtn.addTarget(self, action: #selector(self.selectAction(_:)), for: .touchUpInside)
+        addedData.id = courseList[indexPath.row].id
+//        courseList[indexPath.row].id = addedData.id
         
+//            cell.addToCartBtn.backgroundColor = UIColor.systemOrange
+//
+//        }else{
+//            cell.addToCartBtn.backgroundColor = UIColor.systemGreen
+//        }
+        cell.favouriteBtn.addTarget(self, action: #selector(self.favouriteAction(_:)), for: .touchUpInside)
+        if courseList[indexPath.row].id == favData.id{
+            
+            cell.favouriteBtn.tintColor = #colorLiteral(red: 0.9138749242, green: 0.1091875806, blue: 0.2408354878, alpha: 1)
+            
+        }else{
+            cell.favouriteBtn.tintColor = UIColor.lightGray
+        }
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -186,10 +248,38 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
         let vc : DetailsVC = storyboard.instantiateViewController(identifier: "DetailsVC")
         vc.courseId = courseList[indexPath.row].id
         debugPrint(vc.courseId)
-        Routes.ser = String(courseList[indexPath.row].id)
+//        Routes.ser = String(courseList[indexPath.row].id)
+//        debugPrint(String(courseList[indexPath.row].id))
+//        debugPrint(Routes.ser)
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    
+    @objc func selectAction (_ sender: CustomButton){
+        if addCartBool{
+            addCartBool = true
+            addedData = courseList[sender.tag]
+             tableView.reloadData()
+            debugPrint("buttontapped")
+             userIdForCart = addedData.id
+             addCart()
+        }else{
+            addCartBool = false
+            addedData = courseList[sender.tag]
+            tableView.reloadData()
+            debugPrint("buttontappedagain")
+            userIdForCart = addedData.id
+            addCart()
+        }
+
+       }
+    @objc func favouriteAction (_ sender: CustomButton){
+           
+           favData = courseList[sender.tag]
+            tableView.reloadData()
+           debugPrint("buttontapped")
+            userIdForCart = favData.id
+            addCart()
+
+       }
     
     
         fileprivate let sectionTitles = ["Configurations", "Decelaration Distance", "Item"]
@@ -300,19 +390,32 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
         self.navigationController?.present(vc, animated: true)
     }
     @IBAction func cartAction(_ sender:UIButton){
-        let storyboard = UIStoryboard(name:"Main", bundle: nil)
-        let vc:CartVC = storyboard.instantiateViewController(identifier: "CartVC")
-        self.navigationController?.pushViewController(vc, animated: true)
+//        let storyboard = UIStoryboard(name:"Main", bundle: nil)
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "CartVC") as! UINavigationController
+//        navigationController?.pushViewController(vc, animated: true)
+        view.insertSubview(vc.view, at: 4)
+        addChild(vc)
+        vc.didMove(toParent: self)
+//        let vc:CartVC = storyboard.instantiateViewController(identifier: "CartVC")
+//        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    @IBAction func viewAllAction(_ sender:UIButton){
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: "CourseVC") as! UINavigationController
+        view.insertSubview(vc.view, at: 4)
+        addChild(vc)
+        vc.didMove(toParent: self)
     }
     
 
-class BadgedButtonItem: UIBarButtonItem {
+class BadgedButtonItem: UIButton {
 
     public func setBadge(with value: Int) {
         self.badgeValue = value
     }
 
-    private var badgeValue: Int? {
+     var badgeValue: Int? {
         didSet {
             if let value = badgeValue,
                 value > 0 {
@@ -329,15 +432,15 @@ class BadgedButtonItem: UIBarButtonItem {
     private let filterBtn = UIButton()
     private let lblBadge = UILabel()
 
-    override init() {
-        super.init()
-        setup()
-    }
+//    override init() {
+//        super.init()
+//        setup()
+//    }
 
-    init(with image: UIImage?) {
-        super.init()
-        setup(image: image)
-    }
+//    init(with image: UIImage?) {
+//        super.init()
+//        setup(image: image)
+//    }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -362,7 +465,7 @@ class BadgedButtonItem: UIBarButtonItem {
         self.lblBadge.minimumScaleFactor = 0.1
         self.lblBadge.adjustsFontSizeToFitWidth = true
         self.filterBtn.addSubview(lblBadge)
-        self.customView = filterBtn
+//        self.customView = filterBtn
     }
 
     @objc func buttonPressed() {

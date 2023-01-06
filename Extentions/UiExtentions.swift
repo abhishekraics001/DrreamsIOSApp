@@ -35,7 +35,7 @@ extension UIView {
         let color2 = UIColor(rgb: 0xe0e0eb)
 //        layer.cornerRadius = 15.0;
         layer.shadowColor =  UIColor.lightGray.cgColor; //color2.cgColor;
-        layer.backgroundColor =  UIColor.lightGray.cgColor; //UIColor.lightGray.cgColor;
+//        layer.backgroundColor =  UIColor.lightGray.cgColor; //UIColor.lightGray.cgColor;
         layer.shadowOpacity = 0.40;
         layer.shadowRadius = 15.0;
         layer.shadowOffset =  CGSize(width: -1, height: -1);

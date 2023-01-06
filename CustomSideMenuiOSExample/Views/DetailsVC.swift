@@ -29,6 +29,8 @@ class DetailsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var loaderView = LoaderView()
     var getdetail = DetailsModel()
     var couseDetail = CourseDetail()
+    var courseSubject = [CourseSubject]()
+    var courseContent = [Content]()
     var courseId = 0
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,7 +49,14 @@ class DetailsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.headerView.layer.insertSublayer(gradientLayer, at: 0)
         // Do any additional setup after loading the view.
         getData()
-        
+        subjectTable.frame = CGRect(x: 0, y: 0, width: Int(self.view.frame.size.width), height: 400)
+        subjectTable.delegate = nil
+        subjectTable.dataSource = nil
+        // Register TableView Cell
+        self.subjectTable.register(SubjectCell.nib, forCellReuseIdentifier: SubjectCell.identifier)
+
+        // Update TableView with the data
+        self.subjectTable.reloadData()
 //        self.subjectTable.register(UINib(nibName: "SubjectCell", bundle: nil), forCellReuseIdentifier: "SubjectCell")
 //        self.subjectTable.reloadData()
         
@@ -55,8 +64,8 @@ class DetailsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     //API calling
     private func getData(){
         self.loaderView.showLoader(view: self.view)
-        let parameters = ""
-        let webService = WebService()
+        let parameters = String(courseId)
+        let webService = ApiService()
         let viewModel = DetailsViewModel(service: webService, parameters: parameters)
         
         viewModel.detailApi(parameters: parameters) { data in
@@ -69,7 +78,7 @@ class DetailsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     self.getdetail = DetailsModel()
                     self.getdetail = viewModel
                     self.couseDetail = data
-                    debugPrint("count",data)
+                    debugPrint("data",data)
                     self.titleLbl.text = String(data.v_name)
                     self.descLbl.text = String(data.t_short_description)
                     self.largedescLbl.text = String(data.t_long_description)
@@ -85,6 +94,15 @@ class DetailsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                         self.statusView.backgroundColor = UIColor(red: 1.00, green: 0.20, blue: 0.82, alpha: 1.00)
                     }
                     self.setImage(imageView: self.courseImage, imageUrl: String(data.v_course_image_path))
+                    if let subjectList = data.course_subjects{
+                            debugPrint("subjectListCount", subjectList.count)
+                            self.courseSubject = subjectList
+//                            self.courseContent = contentList
+//                            debugPrint("content:", contentList)
+                            self.subjectTable.delegate = self
+                            self.subjectTable.dataSource = self
+                            self.subjectTable.reloadData()
+                    }
                 }
             }
         }
@@ -114,7 +132,6 @@ class DetailsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     @IBAction func backAction(_ :CustomButton){
         self.navigationController?.popViewController(animated: true)
-        Routes.ser = "0"
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -124,11 +141,19 @@ class DetailsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return 65
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return courseSubject.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = subjectTable.dequeueReusableCell(withIdentifier: "SubjectCell", for:indexPath) as! SubjectCell
+        guard let cell = subjectTable.dequeueReusableCell(withIdentifier: SubjectCell.identifier, for: indexPath) as? SubjectCell else { fatalError("xib doesn't exist") }
+        cell.titleLbl.text = courseSubject[indexPath.row].v_name
         return cell
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = subjectTable.cellForRow(at: indexPath)as! SubjectCell
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc : CourseContentVC = storyboard.instantiateViewController(identifier: "CourseContentVC")
+        vc.courseContent = courseSubject[indexPath.row].contents
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

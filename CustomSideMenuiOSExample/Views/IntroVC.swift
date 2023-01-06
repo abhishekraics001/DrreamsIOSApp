@@ -14,6 +14,8 @@ class IntroVC: UIViewController, FSPagerViewDelegate, FSPagerViewDataSource {
     @IBOutlet weak var slideBtn:CustomButton!
     @IBOutlet weak var pagerTitle:UILabel!
     @IBOutlet weak var pagerDesc:UILabel!
+    @IBOutlet weak var bgImage:UIImageView!
+    @IBOutlet weak var bgView:UIView!
     
     var loaderView = LoaderView()
     var slider = [Slider]()
@@ -45,12 +47,10 @@ class IntroVC: UIViewController, FSPagerViewDelegate, FSPagerViewDataSource {
     
     private func getStartUp(){
         self.loaderView.showLoader(view: self.view)
-        
-        let deviceToken = UIDevice.current.identifierForVendor!.uuidString
-        Constants.deviceToken = deviceToken
-        
+
         let parameters = ""
-        let webService = WebService()
+        let webService = ApiService()
+        webService.state = 1000
         let viewModel = HomeSliderViewModel(service: webService, parameters: parameters)
         
         viewModel.StartUpApi(parameters: parameters) { data in
@@ -180,7 +180,17 @@ class IntroVC: UIViewController, FSPagerViewDelegate, FSPagerViewDataSource {
     }
     @IBAction func go(_ : CustomButton){
         let sb = UIStoryboard(name: "Main", bundle: nil)
-        let vc:HomeViewController = sb.instantiateViewController(withIdentifier: "HomeNavID") as! HomeViewController
-        navigationController?.pushViewController(vc, animated: true)
+        let vc = sb.instantiateViewController(withIdentifier: "HomeNavID") as! UINavigationController
+//        navigationController?.pushViewController(vc, animated: true)
+        view.insertSubview(vc.view, at: 6)
+        addChild(vc)
+        vc.didMove(toParent: self)
+//        pagerView.isHidden = true
+//        letsGo.isHidden = true
+//        bgImage.isHidden = true
+//        bgView.isHidden = true
+//        pagerTitle.isHidden = true
+//        pagerDesc.isHidden = true
+        
     }
 }

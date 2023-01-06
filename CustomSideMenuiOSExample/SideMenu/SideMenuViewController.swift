@@ -24,6 +24,7 @@ class SideMenuViewController: UIViewController {
     @IBOutlet var sideMenuTableView: UITableView!
     @IBOutlet var footerLabel: UILabel!
     @IBOutlet weak var loginBtn:CustomButton!
+    @IBOutlet weak var editImage:UIImageView!
 
     var delegate: SideMenuViewControllerDelegate?
     var defaultHighlightedCell: Int = 0
@@ -33,10 +34,10 @@ class SideMenuViewController: UIViewController {
         SideMenuModel(icon: UIImage(systemName: "house.fill")!, title: "Home"),
         SideMenuModel(icon: UIImage(systemName: "graduationcap.fill")!, title: "Course"),
         SideMenuModel(icon: UIImage(systemName: "heart.fill")!, title: "My Favoruite Course"),
-        SideMenuModel(icon: UIImage(systemName: "doc.on.doc.fill")!, title: "Order"),
+        SideMenuModel(icon: UIImage(systemName: "doc.on.doc.fill")!, title: "Orders"),
         SideMenuModel(icon: UIImage(systemName: "book.closed.fill")!, title: "My Course"),
         SideMenuModel(icon: UIImage(systemName: "book.closed.fill")!, title: "My Course"),
-        SideMenuModel(icon: UIImage(systemName: "headphones.circle.fill")!, title: "Contact US"),
+        SideMenuModel(icon: UIImage(systemName: "headphones.circle.fill")!, title: "Contact Us"),
         SideMenuModel(icon: UIImage(systemName: "questionmark.circle.fill")!, title: "FAQ"),
         SideMenuModel(icon: UIImage(systemName: "arrowshape.zigzag.right.fill")!, title: "Logout")
     ]
@@ -84,10 +85,12 @@ class SideMenuViewController: UIViewController {
         if userName.text == "" {
             headerImageView.isHidden = true
             userStack.isHidden = true
+            editImage.isHidden = true
             loginsignup.isHidden = false
         }else{
             headerImageView.isHidden = false
             userStack.isHidden = false
+            editImage.isHidden = false
             loginsignup.isHidden = true
         }
     }
@@ -100,10 +103,12 @@ class SideMenuViewController: UIViewController {
         if userName.text == "" {
             headerImageView.isHidden = true
             userStack.isHidden = true
+            editImage.isHidden = true
             loginsignup.isHidden = false
         }else{
             headerImageView.isHidden = false
             userStack.isHidden = false
+            editImage.isHidden = false
             loginsignup.isHidden = true
         }
     }
@@ -157,10 +162,18 @@ extension SideMenuViewController: UITableViewDataSource {
         }
     }
     @IBAction func Login(_: CustomButton){
-
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc:SignInVC = storyboard.instantiateViewController(identifier: "SignInVC")
-        present(vc, animated: true)
-//        self.navigationController?.present(vc, animated: true)
+        if Constants.userId == ""{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc:SignInVC = storyboard.instantiateViewController(identifier: "SignInVC")
+            present(vc, animated: true)
+            //        self.navigationController?.present(vc, animated: true)
+        }else{
+            let sb = UIStoryboard(name: "Main", bundle: nil)
+            let vc = sb.instantiateViewController(withIdentifier: "ProfileVC") as! UINavigationController
+    //        navigationController?.pushViewController(vc, animated: true)
+            view.insertSubview(vc.view, at: 4)
+            addChild(vc)
+            vc.didMove(toParent: self)
+        }
     }
 }

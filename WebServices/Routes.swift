@@ -17,14 +17,12 @@ struct Routes {
     static let varifyOtpSignIn = url + "users/signin-verify-otp"
     static let slide = url + "home?v_device_token=\(Constants.deviceToken)&e_device_type=\(Constants.deviceType)&v_search_keyword="
     
-    static let popularCourse = url + "popular-courses?v_device_token=\(Constants.deviceToken)&e_device_type=\(Constants.deviceType)&i_page_no=0&e_is_pagination=Yes&i_limit=5&v_search_keyword=&i_category_id=\(FilterVC().radiology)&i_course_badge_type_id=\(FilterVC().bestSeller+FilterVC().new+FilterVC().trending)&e_course_content_type\(FilterVC().contentType)=&e_is_certificate=\(FilterVC().certificate)&e_course_access=\(FilterVC().courseAccess)&e_type=\(FilterVC().courseType)&e_is_featured_course=\(FilterVC().featuredCourses)&i_course_limited_access_duration_id=\(FilterVC().duration)"
+    static let popularCourse = url + "popular-courses?v_device_token=\(Constants.deviceToken)&e_device_type=\(Constants.deviceType)"
     static let countryCode = url + "countries?v_device_token=\(Constants.deviceToken)&e_device_type=\(Constants.deviceType)"
     static let getStartup = url + "app-startup-screens?v_device_token=\(Constants.deviceToken)&e_device_type=\(Constants.deviceType)"
-    static var ser = ""
-    let idddd = ""
-    static let getDetails = url + "courses/\(ser)"
-    
-}
-class variables {
-    var ser = ""
+    static var getDetails = url + "courses/"
+    static var getCartCourses = url + "users/\(Constants.userId)/course-cart"
+    static var addCartCourses = url + "users/\(Constants.userId)/add-remove-course-cart"
+    static var faq = url + "faqs?v_device_token=\(Constants.deviceToken)&e_device_type=\(Constants.deviceType)"
+    static var contactUs = url + "/users/contact-us"
 }

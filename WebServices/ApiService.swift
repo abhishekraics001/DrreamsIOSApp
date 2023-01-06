@@ -1,5 +1,5 @@
 //
-//  Webservice.swift
+//  ApiService.swift
 //  Drreams
 //
 //  Created by Mohd Shams Naqvi on 17/12/22.
@@ -12,13 +12,13 @@ import Alamofire
 var Timestamp: Int64 {
     return Int64(NSDate().timeIntervalSince1970*1000)
 }
-class WebService {
+class ApiService {
     var state = uint()
     let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
     
     
     // Post Api Call
-    func post<T: Decodable>(_ objectType: T.Type, urlString: String,  parameters: [String: Any], onCompletion: @escaping (Any?, Any?, Any?)-> Void){
+    func post<T: Decodable>(_ objectType: T.Type, urlString: String, parameters: [String: Any], onCompletion: @escaping (Any?, Any?, Any?)-> Void){
         let status = Reach().connectionStatus()
         switch status {
         case .unknown, .offline:
@@ -78,7 +78,7 @@ class WebService {
         task.resume()
     }
     // Get Api Call
-    func get<T: Decodable>(_ objectType: T.Type, urlString: String,  parameters: String, onCompletion: @escaping (Any?, Any?, Any?)-> Void){
+    func get<T: Decodable>(_ objectType: T.Type, urlString: String, parameters: String, onCompletion: @escaping (Any?, Any?, Any?)-> Void){
         let status = Reach().connectionStatus()
         switch status {
         case .unknown, .offline:

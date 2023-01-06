@@ -35,26 +35,6 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </imageView>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AvI-tZ-bSW">
-                                                <rect key="frame" x="348" y="13" width="25" height="25"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="25" id="0xH-3f-FsY"/>
-                                                    <constraint firstAttribute="width" constant="25" id="DYC-Ke-pE2"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" image="heart.circle.fill" catalog="system">
-                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </state>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.CornerRadius">
-                                                        <real key="value" value="12.5"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="frX-7r-C3i">
                                                 <rect key="frame" x="10" y="13" width="62" height="25"/>
                                                 <subviews>
@@ -98,19 +78,59 @@
                                                     </label>
                                                 </subviews>
                                             </stackView>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LNi-bN-q7U" customClass="CustomView" customModule="Drreams" customModuleProvider="target">
+                                                <rect key="frame" x="350" y="13" width="30" height="30"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AvI-tZ-bSW" customClass="CustomButton" customModule="Drreams" customModuleProvider="target">
+                                                        <rect key="frame" x="5" y="5" width="20" height="20"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="20" id="0xH-3f-FsY"/>
+                                                            <constraint firstAttribute="width" constant="20" id="DYC-Ke-pE2"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                        <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                        <state key="normal" image="suit.heart.fill" catalog="system">
+                                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="titleShadowColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </state>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                <real key="value" value="1"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="30" id="bgB-am-MZc"/>
+                                                    <constraint firstAttribute="height" constant="30" id="f0U-Yd-S4N"/>
+                                                    <constraint firstItem="AvI-tZ-bSW" firstAttribute="centerX" secondItem="LNi-bN-q7U" secondAttribute="centerX" id="hiB-lg-3kD"/>
+                                                    <constraint firstItem="AvI-tZ-bSW" firstAttribute="centerY" secondItem="LNi-bN-q7U" secondAttribute="centerY" id="u7J-o4-WO7"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="15"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="AvI-tZ-bSW" secondAttribute="trailing" constant="15" id="1su-Nx-OpD"/>
+                                            <constraint firstItem="LNi-bN-q7U" firstAttribute="top" secondItem="3D6-FU-fSm" secondAttribute="top" constant="13" id="5L6-a5-tYq"/>
                                             <constraint firstItem="FH3-2M-z2R" firstAttribute="top" secondItem="3D6-FU-fSm" secondAttribute="top" id="BHZ-r8-f9a"/>
                                             <constraint firstItem="frX-7r-C3i" firstAttribute="leading" secondItem="3D6-FU-fSm" secondAttribute="leading" constant="10" id="RaN-du-M0Q"/>
                                             <constraint firstItem="gG5-jx-CYX" firstAttribute="leading" secondItem="3D6-FU-fSm" secondAttribute="leading" constant="10" id="UKX-dM-jbd"/>
                                             <constraint firstItem="frX-7r-C3i" firstAttribute="top" secondItem="3D6-FU-fSm" secondAttribute="top" constant="13" id="ZEm-rN-5fa"/>
                                             <constraint firstAttribute="trailing" secondItem="gG5-jx-CYX" secondAttribute="trailing" constant="10" id="bH6-ua-OAC"/>
                                             <constraint firstAttribute="bottom" secondItem="gG5-jx-CYX" secondAttribute="bottom" id="fUF-z7-MM8"/>
-                                            <constraint firstItem="AvI-tZ-bSW" firstAttribute="top" secondItem="3D6-FU-fSm" secondAttribute="top" constant="13" id="i87-jq-V4h"/>
                                             <constraint firstAttribute="bottom" secondItem="FH3-2M-z2R" secondAttribute="bottom" id="jGe-95-F1u"/>
                                             <constraint firstItem="FH3-2M-z2R" firstAttribute="leading" secondItem="3D6-FU-fSm" secondAttribute="leading" id="kxe-2i-AKA"/>
+                                            <constraint firstAttribute="trailing" secondItem="LNi-bN-q7U" secondAttribute="trailing" constant="8" id="ntl-HY-CYf"/>
                                             <constraint firstAttribute="trailing" secondItem="FH3-2M-z2R" secondAttribute="trailing" id="xvH-mH-LF8"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
@@ -119,7 +139,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ExX-sl-e86">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ExX-sl-e86" customClass="CustomButton" customModule="Drreams" customModuleProvider="target">
                                         <rect key="frame" x="264" y="225" width="116" height="30"/>
                                         <color key="backgroundColor" systemColor="systemGreenColor"/>
                                         <constraints>
@@ -131,8 +151,8 @@
                                             <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.CornerRadius">
-                                                <integer key="value" value="15"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="15"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </button>
@@ -253,7 +273,9 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" systemColor="systemGray5Color"/>
             <connections>
+                <outlet property="addToCartBtn" destination="ExX-sl-e86" id="FrE-2p-av6"/>
                 <outlet property="courseValidity" destination="ZhU-jM-GJH" id="ZHc-iC-Ac4"/>
+                <outlet property="favouriteBtn" destination="AvI-tZ-bSW" id="1xH-wN-WBx"/>
                 <outlet property="imagee" destination="FH3-2M-z2R" id="Z9k-Vz-d0E"/>
                 <outlet property="modules" destination="MDa-Wj-ahe" id="XC3-E9-Fqy"/>
                 <outlet property="price" destination="DSN-VI-G5F" id="Z1O-nY-2Du"/>
@@ -268,14 +290,25 @@
             <point key="canvasLocation" x="147.82608695652175" y="79.352678571428569"/>
         </tableViewCell>
     </objects>
+    <designables>
+        <designable name="AvI-tZ-bSW">
+            <size key="intrinsicContentSize" width="26.5" height="25"/>
+        </designable>
+        <designable name="ExX-sl-e86">
+            <size key="intrinsicContentSize" width="111.5" height="34.5"/>
+        </designable>
+    </designables>
     <resources>
         <image name="arrowtriangle.right.circle.fill" catalog="system" width="128" height="123"/>
-        <image name="heart.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="suit.heart.fill" catalog="system" width="128" height="107"/>
         <systemColor name="labelColor">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="linkColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray5Color">
             <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

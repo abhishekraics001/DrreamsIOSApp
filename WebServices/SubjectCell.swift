@@ -1,13 +1,18 @@
 //
-//  Filter2Cell.swift
+//  SubjectCell.swift
 //  Drreams
 //
-//  Created by Mohd Shams Naqvi on 22/12/22.
+//  Created by Mohd Shams Naqvi on 04/01/23.
 //
 
 import UIKit
 
-class Filter2Cell: UITableViewCell {
+class SubjectCell: UITableViewCell {
+    
+    class var identifier: String { return String(describing: self) }
+    class var nib: UINib { return UINib(nibName: identifier, bundle: nil) }
+    
+    @IBOutlet weak var titleLbl:UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

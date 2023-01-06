@@ -25,12 +25,15 @@ class CourseListTableViewCell: UITableViewCell {
     @IBOutlet weak var imagee: UIImageView!
     @IBOutlet weak var modules: UILabel!
     @IBOutlet weak var videos: UILabel!
+    @IBOutlet weak var addToCartBtn: CustomButton!
+    @IBOutlet weak var favouriteBtn: CustomButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
         uixx.mainShadow()
         uscc.innerShadow()
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

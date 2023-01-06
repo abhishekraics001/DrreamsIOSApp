@@ -9,14 +9,13 @@ import Foundation
 import UIKit
 
 class DetailsViewModel{
-    private(set) var webservice: WebService!
+    private(set) var webservice: ApiService!
     var statusCode: Int!
     var error: Error!
     let deviceToken = UIDevice.current.identifierForVendor!.uuidString
     //  code for Api Calling
     var modelData: ResponseModel<DetailsModel>!
-    var query = 0
-    init(service : WebService, parameters: String) {
+    init(service : ApiService, parameters: String) {
         self.webservice = service
     }
 }

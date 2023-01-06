@@ -10,7 +10,7 @@ import UIKit
 
 //MARK: - SignInViewModel
 class SignInViewModel{
-    private(set) var webservice: WebService!
+    private(set) var webservice: ApiService!
     var statusCode: Int!
     var error: Error!
     let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as! SceneDelegate
@@ -18,7 +18,7 @@ class SignInViewModel{
     var modelData: ResponseModel<SignInModel>!
     var model: ResponseModel<VarifyOtpModel>!
     
-    init(service : WebService, parameters: [String: Any]) {
+    init(service : ApiService, parameters: [String: Any]) {
         self.webservice = service
     }
 }

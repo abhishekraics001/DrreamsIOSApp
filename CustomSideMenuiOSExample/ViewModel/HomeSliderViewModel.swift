@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class HomeSliderViewModel{
-    private(set) var webservice: WebService!
+    private(set) var webservice: ApiService!
     var statusCode: Int!
     var error: Error!
     let deviceToken = UIDevice.current.identifierForVendor!.uuidString
@@ -18,7 +18,7 @@ class HomeSliderViewModel{
     var modelData: ResponseModel<HomeModel>!
     var modelDataa: ResponseModel<PopularModel>!
     var modelDataForStartUp: ResponseModel<StartUpModel>!
-    init(service : WebService, parameters: String) {
+    init(service : ApiService, parameters: String) {
         self.webservice = service
     }
 }

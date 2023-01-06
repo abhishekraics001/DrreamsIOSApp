@@ -154,31 +154,35 @@ extension MainViewController: SideMenuViewControllerDelegate {
             // Home
             self.showViewController(viewController: UINavigationController.self, storyboardId: "HomeNavID")
         case 1:
-            // Music
-            self.showViewController(viewController: UINavigationController.self, storyboardId: "MusicNavID")
+            // Course
+            self.showViewController(viewController: UINavigationController.self, storyboardId: "CourseVC")
         case 2:
-            // Movies
-            self.showViewController(viewController: UINavigationController.self, storyboardId: "MoviesNavID")
+            // My Favourite Course
+            self.showViewController(viewController: UINavigationController.self, storyboardId: "FavouriteVC")
         case 3:
-            // Books
-            self.showViewController(viewController: BooksViewController.self, storyboardId: "BooksVCID")
+            // Orders
+            self.showViewController(viewController: UINavigationController.self, storyboardId: "OrdersVC")
         case 4:
-            // Profile
-            let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-            let profileModalVC = storyboard.instantiateViewController(withIdentifier: "ProfileModalID") as? ProfileViewController
-            present(profileModalVC!, animated: true, completion: nil)
+            // My Course
+            self.showViewController(viewController: UINavigationController.self, storyboardId: "MyCourseVC")
         case 5:
-            // Settings
-            self.showViewController(viewController: UINavigationController.self, storyboardId: "SettingsNavID")
-        case 6:
-            //Saparator
+            // Saparator
             let cell = SideMenuCell()
             cell.communicate.isHidden = false
             cell.saparator.isHidden = false
             cell.titleLabel.isHidden = true
             cell.iconImageView.isHidden = true
+            
+        case 6:
+            // Contact Us
+            self.showViewController(viewController: UINavigationController.self, storyboardId: "ContactUsVC")
         case 7:
-            // Like us on facebook
+            // FAQ
+            self.showViewController(viewController: UINavigationController.self, storyboardId: "FaqVC")
+//            let safariVC = SFSafariViewController(url: URL(string: "https://www.facebook.com/johncodeos")!)
+//            present(safariVC, animated: true)
+        case 8:
+            // LogOut
             let safariVC = SFSafariViewController(url: URL(string: "https://www.facebook.com/johncodeos")!)
             present(safariVC, animated: true)
         default:
@@ -187,6 +191,9 @@ extension MainViewController: SideMenuViewControllerDelegate {
 
         // Collapse side menu with animation
         DispatchQueue.main.async { self.sideMenuState(expanded: false) }
+    }
+    private func logout(){
+        
     }
     func selectLoginBtn(_ login:UIButton){
 //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
