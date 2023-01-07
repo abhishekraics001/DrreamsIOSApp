@@ -93,7 +93,6 @@ class ContactUsVC: UIViewController{
         let parameters: [String: Any] = ["v_device_token": Constants.deviceToken, "e_device_type": Constants.deviceType, "t_comment": msgtxt.text!, "v_title": titletxt.text!, "v_user_name": nametxt.text!, "v_email_id": emailtxt.text!, "v_phone_number": phonetxt.text!]
         debugPrint("parameters:", parameters)
         let webservice = ApiService()
-        webservice.state = 1000
         let viewModel = ContactUsViewModel(service: webservice, parameters: parameters)
         
         viewModel.contactApi(parameters: parameters) { data in

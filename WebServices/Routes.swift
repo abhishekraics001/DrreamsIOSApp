@@ -25,4 +25,5 @@ struct Routes {
     static var addCartCourses = url + "users/\(Constants.userId)/add-remove-course-cart"
     static var faq = url + "faqs?v_device_token=\(Constants.deviceToken)&e_device_type=\(Constants.deviceType)"
     static var contactUs = url + "/users/contact-us"
+    static var mycourses = url 
 }

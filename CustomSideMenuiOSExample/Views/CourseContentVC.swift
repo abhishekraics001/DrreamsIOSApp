@@ -49,12 +49,12 @@ class CourseContentVC: UIViewController, UITableViewDelegate, UITableViewDataSou
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let cell = tablee.cellForRow(at: indexPath)as! CourseContentCell
-//
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let vc : CourseContentVC = storyboard.instantiateViewController(identifier: "CourseContentVC")
-////        vc.courseContent = courseSubject
-//        self.navigationController?.pushViewController(vc, animated: true)
+        let cell = tablee.cellForRow(at: indexPath)as! CourseContentCell
+
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc : CourseContentVC = storyboard.instantiateViewController(identifier: "CourseContentVC")
+//        vc.courseContent = courseSubject
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     @IBAction func backAction(_ sender:CustomButton){
         self.navigationController?.popViewController(animated: true)

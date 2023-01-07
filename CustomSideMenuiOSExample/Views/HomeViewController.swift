@@ -27,8 +27,8 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
     var slider = [Slider]()
     var populardata = PopularModel()
     var courseList = [Courses]()
-    var addedData = Courses()
-    var favData = Courses()
+    var addedData = [Courses]()
+    var favData = [Courses]()
     let gradientLayer = CAGradientLayer()
     var addCartBool = false
     
@@ -152,10 +152,10 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
             }
         }
     }
-    private func addCart() {
+    private func addCart(userID: Int, operation: String) {
         self.loaderView.showLoader(view: self.view)
 
-        let parameters: [String: Any] = ["v_device_token": Constants.deviceToken, "e_device_type": Constants.deviceType, "i_course_id": userIdForCart, "e_operation": "add","i_course_duration_price_id": "0"]
+        let parameters: [String: Any] = ["v_device_token": Constants.deviceToken, "e_device_type": Constants.deviceType, "i_course_id": userID, "e_operation": operation,"i_course_duration_price_id": "0"]
         debugPrint("parameters:", parameters)
         let webservice = ApiService()
         webservice.state = 1000
@@ -210,35 +210,14 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CourseListTableViewCell.identifier, for: indexPath) as? CourseListTableViewCell else { fatalError("xib doesn't exist") }
         cell.configureCell(data: courseList[indexPath.row])
         
-//        if courseList[indexPath.row].id == 0 {
-//            if checkMarkPrivacy{
-//                checkMarkPrivacy = false
-//                checkForPrivacy.setImage(UIImage(systemName:"square"), for: .normal)
-//            }
-//            else{
-//                checkMarkPrivacy = true
-//                checkForPrivacy.setImage(UIImage(systemName:"checkmark.square"), for: .normal)
-//            }
-//        }else{
-//
-//        }
         cell.addToCartBtn.addTarget(self, action: #selector(self.selectAction(_:)), for: .touchUpInside)
-        addedData.id = courseList[indexPath.row].id
-//        courseList[indexPath.row].id = addedData.id
-        
-//            cell.addToCartBtn.backgroundColor = UIColor.systemOrange
-//
-//        }else{
-//            cell.addToCartBtn.backgroundColor = UIColor.systemGreen
-//        }
+
         cell.favouriteBtn.addTarget(self, action: #selector(self.favouriteAction(_:)), for: .touchUpInside)
-        if courseList[indexPath.row].id == favData.id{
-            
-            cell.favouriteBtn.tintColor = #colorLiteral(red: 0.9138749242, green: 0.1091875806, blue: 0.2408354878, alpha: 1)
-            
-        }else{
-            cell.favouriteBtn.tintColor = UIColor.lightGray
-        }
+//        if let is_saved = self.courseList[indexPath.row].e_is_favourite_course, is_saved == "Yes"{
+//            cell.favouriteBtn.tintColor = .lightGray
+//        }else {
+//            cell.favouriteBtn.tintColor = #colorLiteral(red: 0.9138749242, green: 0.1091875806, blue: 0.2408354878, alpha: 1)
+//        }
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -254,31 +233,26 @@ class HomeViewController: UIViewController, FSPagerViewDataSource,FSPagerViewDel
         self.navigationController?.pushViewController(vc, animated: true)
     }
     @objc func selectAction (_ sender: CustomButton){
-        if addCartBool{
-            addCartBool = true
-            addedData = courseList[sender.tag]
-             tableView.reloadData()
-            debugPrint("buttontapped")
-             userIdForCart = addedData.id
-             addCart()
-        }else{
-            addCartBool = false
-            addedData = courseList[sender.tag]
-            tableView.reloadData()
-            debugPrint("buttontappedagain")
-            userIdForCart = addedData.id
-            addCart()
+        if sender.tintColor ==  .green{
+            sender.tintColor = .systemOrange
+            addCart(userID: courseList[sender.tag].id, operation: "add")
+            print("add")
+        }else {
+            sender.tintColor = .lightGray
+            addCart(userID: courseList[sender.tag].id, operation: "remove")
+            print("remove")
         }
-
        }
     @objc func favouriteAction (_ sender: CustomButton){
-           
-           favData = courseList[sender.tag]
-            tableView.reloadData()
-           debugPrint("buttontapped")
-            userIdForCart = favData.id
-            addCart()
-
+        if sender.tintColor ==  .lightGray{
+            sender.tintColor = #colorLiteral(red: 0.9138749242, green: 0.1091875806, blue: 0.2408354878, alpha: 1)
+            addCart(userID: courseList[sender.tag].id, operation: "add")
+            print("add")
+        }else {
+            sender.tintColor = .lightGray
+            addCart(userID: courseList[sender.tag].id, operation: "remove")
+            print("remove")
+        }
        }
     
     

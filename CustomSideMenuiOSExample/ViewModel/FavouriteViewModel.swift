@@ -1,14 +1,14 @@
 //
-//  CartViewModel.swift
+//  FavouriteViewModel.swift
 //  Drreams
 //
-//  Created by Mohd Shams Naqvi on 02/01/23.
+//  Created by Mohd Shams Naqvi on 07/01/23.
 //
 
 import Foundation
 import UIKit
 
-class CartViewModel{
+class FavouriteViewModel{
     private(set) var webservice: ApiService!
     var statusCode: Int!
     var error: Error!
@@ -20,11 +20,11 @@ class CartViewModel{
         self.webservice = service
     }
 }
-extension CartViewModel {
+extension FavouriteViewModel {
     
-    func postCartApi(parameters: [String: Any], completion :@escaping (CartViewModel) -> ()) {
+    func postApi(parameters: [String: Any], completion :@escaping (FavouriteViewModel) -> ()) {
         
-        self.webservice.post(HomeModel.self, urlString: Routes.addCartCourses, parameters: parameters){(response, error, statusCode)  in
+        self.webservice.post(HomeModel.self, urlString: Routes.signIn, parameters: parameters){(response, error, statusCode)  in
             
             self.statusCode = statusCode as? Int
             self.error = error as? Error
@@ -53,33 +53,6 @@ extension CartViewModel {
                 if let modelData = response as? ResponseModel<HomeModel>{
                     self.modelData = modelData
                 }
-            }
-            DispatchQueue.main.async {
-                completion(self)
-            }
-        }
-    }
-}
-class CartGetViewModel{
-    private(set) var webservice: ApiService!
-    var statusCode: Int!
-    var error: Error!
-    let deviceToken = UIDevice.current.identifierForVendor!.uuidString
-    
-    //  code for Api Calling
-    var modelData: ResponseModel<PopularModel>!
-    
-    init(service : ApiService, parameters: String) {
-        self.webservice = service
-    }
-}
-extension CartGetViewModel {
-    
-    func getCartApi(parameters: String, completion :@escaping (CartGetViewModel) -> ()) {
-        self.webservice.get(PopularModel.self, urlString: Routes.getCartCourses, parameters: parameters){(response, error, statusCode)  in
-            debugPrint("url:",Routes.getCartCourses)
-            if let modelData = response as? ResponseModel<PopularModel>{
-                self.modelData = modelData
             }
             DispatchQueue.main.async {
                 completion(self)

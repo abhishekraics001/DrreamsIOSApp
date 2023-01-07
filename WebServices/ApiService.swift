@@ -42,7 +42,7 @@ class ApiService {
         
         
         if self.state == 1000{
-            request.setValue("\(Constants.token)", forHTTPHeaderField: "token")
+            request.setValue("Bearer \(Constants.token)", forHTTPHeaderField: "token")
         }
     else{
     request.setValue("Bearer \(Constants.token)", forHTTPHeaderField: "Authorization")
@@ -95,13 +95,14 @@ class ApiService {
         }
         
         let finalStr = (urlString + parameters).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        print(finalStr)
         let url = URL(string: finalStr)!
         var request = URLRequest(url: url)
 //        Constants.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMTQ3ZjVlZmQ5NDE1ZjA3MjE0ZDU4OCIsImlhdCI6MTY1MDk2MTAzNSwiZXhwIjoxNjUxMDQ3NDM1fQ.mnkg56khI07JQoRXUHNGjWOnjOk4RpAzo_StC--y2SU"
         
         
         if self.state == 1000{
-            request.setValue("\(Constants.token)", forHTTPHeaderField: "token")
+            request.setValue("Bearer \(Constants.token)", forHTTPHeaderField: "token")
         }
         else{
             request.setValue("Bearer \(Constants.token)", forHTTPHeaderField: "Authorization")

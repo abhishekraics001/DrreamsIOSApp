@@ -46,6 +46,12 @@ struct PopularModel: Decodable {
     var limit: String!
     var courses: [Courses]!
 }
+struct MyCourseModel: Decodable {
+    var total_my_course_count: Int!
+    var page_no: Int!
+    var limit: Int!
+    var my_courses : [Courses]!
+}
 struct Courses: Decodable{
     var id: Int!
     var i_course_badge_type_id: Int!
@@ -80,6 +86,8 @@ struct Courses: Decodable{
     var v_course_duration_display_text: String!
     var course_badge_type: CourceType!
     var course_limited_access_price_list: [ Array<String?>]!
+    var e_is_favourite_course: String!
+    var e_is_purchased_course: String!
                 
 }
 struct CourceType: Decodable{
